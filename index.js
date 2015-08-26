@@ -61,6 +61,7 @@
         errorNewPassword: e.target.value.trim().length === 0 ? 'Password cannot be empty' : '',
       }
       this.setState(newState);
+      this.checkStrength(newState.newPassword);
 
       if (!newState.errorOldPassword) { 
         !this.checkOldNew(undefined, newPwd = newState.newPassword) || this.checkNewConfirmed(newPwd = newState.newPassword, undefined);
@@ -81,6 +82,40 @@
       }
 
       this.checkValid(newState);
+    },
+   
+    checkStrength: function(pass) {
+      var complexity = 0;
+      if (/[a-zа-яґєїі]/.test(pass)) {complexity++};
+      if (/[A-ZА-ЯҐЄЇІ]/.test(pass)) {complexity++};
+      if (/[0-9]/.test(pass)) {complexity++};
+      if (/[\!\?,\.@%$#№\*~`]/.test(pass)) {complexity++};
+      if (pass.length > 7) {complexity++};
+      var strength;
+      switch(complexity) {
+        case 0:
+          strength='WAT?';
+          break;
+        case 1:
+          strength='Weak password';
+          break;
+        case 2:
+          strength='Still weak password';
+          break;
+        case 3:
+          strength='Your password is getting stronger';
+          break;
+        case 4:
+          strength='Wow, you have a good password!';
+          break;
+        case 5:
+          strength='Your password is extrastrong';
+          break;
+        default:
+          strength='How could this happen?';
+          break;
+      }
+      this.setState({strengthStr: strength});
     },
 
     checkOldNew: function(oldPwd, newPwd) {
